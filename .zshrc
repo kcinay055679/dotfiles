@@ -7,9 +7,12 @@ HISTFILE=~/.histfile.zsh
 HISTSIZE=1000000
 SAVEHIST=10000000
 setopt share_history
-EDITOR=code
+setopt APPEND_HISTORY
 
+EDITOR=micro
 
+source ~/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+export ZSH_CUSTOM="$HOME/.oh-my-zsh/custom" 
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
@@ -19,6 +22,10 @@ source ~/powerlevel10k/powerlevel10k.zsh-theme
 
 bindkey "^[[1;5C" forward-word
 bindkey "^[[1;5D" backward-word
+bindkey '^H' backward-kill-word
+bindkey '^[[3;5~' kill-word
+bindkey -M menuselect  '^[[D' .backward-char  '^[OD' .backward-char
+bindkey -M menuselect  '^[[C'  .forward-char  '^[OC'  .forward-char
 
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
@@ -129,12 +136,12 @@ dcexecf() {
     sh -c "docker compose exec -it $container $command"
 }
 
-# gi(){
+# gi() {
 #     if [[ $@ == "tpush" ]]; then
 #         git push
 #     fi
 # }
-
+ 
 showp(){ 
     lsof -i:"$@" 
 }
@@ -161,6 +168,28 @@ gh-cancel-runs() {
   echo "$run_ids" | xargs -r -n1 gh run cancel
 }
 
+chats() {
+	# Specifies the directory name for the Chrome profile.
+	# Using a separate profile keeps cookies, history, and extensions isolated.
+	PROFILE="messengers"
+	
+	# Creates an array of URLs to be opened.
+	# Using an array makes the list of sites easy to manage.
+	URLS=(
+	  "https://chat.puzzle.ch"
+	  "https://web.whatsapp.com"
+	  "https://teams.microsoft.com/v2/"
+	  "https://outlook.office.com"
+	)
+	
+	# --- Script Logic ---
+	# This command launches a single new Chrome window using the specified profile.
+	# It opens all the URLs from the URLS array, each in its own tab.
+	# The key change is using "${URLS[@]}" to ensure every URL in the array is passed as an argument.
+	google-chrome-stable \
+	  --profile-directory="$PROFILE" \
+	  "${URLS[@]}"
+}
 
 alias "sha384"="sha-384"
 
@@ -184,6 +213,9 @@ alias "mkdircd"="cd_mkdir"
 alias "mc"="mkdircd"
 
 alias "cm"="mc"
+
+alias ll='ls -alF'
+
 
 
 # git
@@ -240,7 +272,7 @@ alias folders='find . -maxdepth 1 -type d -print0 | xargs -0 du -sk | sort -rn'
 
 alias ls='ls -h --color=auto'
 
-alias reload="source ~/.zshrc"
+alias reload="exec zsh"
 
 alias rl=reload
 
@@ -251,6 +283,12 @@ alias cf=config
 alias xa=xargs
 
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+
+alias df=dotfiles
+
+alias "dfu"="df add -u && df cm 'update existing files'"
+
+alias "df-u"=dfu
 
 
 # docker aliases
@@ -289,45 +327,39 @@ alias "cprept"="cpreptest"
 
 alias "bfg"="java -jar /etc/bfg/bfg-1.14.0.jar"
 alias "vpn:bls"="sudo -E gpclient connect --browser default https://access-partner.bls.ch --hip"
+alias "brst"="BrowserStackLocal --key PMWnGpkpwVBKoNz3a3m6 --force-local"
+alias "brstlo"=brst
+alias "brStLo"=brst
 
 alias cd="z"
 
-
-
-
-
 export UID GID
 
-# Add ~/.local/bin to path
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/bin:$PATH"
+export PLANTUML_JAR=~/.local/bin/plantuml.jar
+
 
 ## asdf
-. $HOME/.asdf/asdf.sh
-
 fpath=(${ASDF_DIR}/completions $fpath)
-plugins=(asdf)
-
+plugins=(colorize git nodejs python ruby rust terraform kubectl helm aws gcloud kubectx kubens docker docker-compose zsh-autosuggestions zsh-syntax-highlighting fast-syntax-highlighting zsh-autocomplete)
+#plugins=(colorize git nodejs python ruby rust terraform kubectl helm aws gcloud kubectx kubens docker docker-compose)
+ASDF_DATA_DIR=/home/yminder/.asdf
+export PATH="$ASDF_DATA_DIR/shims:$PATH"
 
 # Java
 . ~/.asdf/plugins/java/set-java-home.zsh
 
 ## Maven
-export M2_HOME="$HOME/.local/bin/apache-maven/apache-maven-3.9.8"
-export M2=$M2_HOME/bin 
 export MAVEN_OPTS="-Xms256m -Xmx512m" 
-export PATH=$M2:$PATH
 
-
-# Haskell
-[ -f "/home/yanickminder/.ghcup/env" ] && source "/home/yanickminder/.ghcup/env" # ghcup-env
 
 # Thefuck
 eval $(thefuck --alias)
 
 ## Fuzzyfinder
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-autoload -Uz compinit && compinit
+# autoload -Uz compinit && compinit
 
 
 # OC client
@@ -341,6 +373,5 @@ fi
 # Load Angular CLI autocompletion.
 source <(ng completion script)
 
-export PLANTUML_JAR=~/.local/bin/plantuml.jar
 
 eval "$(zoxide init zsh)"

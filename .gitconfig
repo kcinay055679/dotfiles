@@ -6,8 +6,14 @@
     co = checkout
     coo = !git fetch && git checkout
     ci = commit
+	cc = czg
+	ccr = czg --retry
+	acc = "!!g add && g cc "
+	accr = "!!g add && g ccr "
+	ccc = "!czg --retry && git commit --amend"
     st = status
     br = branch
+    rb = "!git rebase $(git rev-parse --abbrev-ref origin/HEAD)"
     hist = "!f() { git log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short $@; }; f"
     type = cat-file -t
     dump = cat-file -p
@@ -27,10 +33,13 @@
 	sb = squashBranch
 	amend = commit --amend --no-edit
     set-latest-date = "!f() { GIT_COMMITTER_DATE=\"$1\" git commit --date=\"$1\" --amend --no-edit --allow-empty; }; f"
+	pfusch = push --force-with-lease
+	prune-branches = !git fetch -p && git branch -vv | grep \": gone]\" | cut -d \" \" -f 1 | xargs git branch -D
 [core]
 	autocrlf = input
 	excludesfile = /home/yanickminder/.config/git/ignore
 	pager = diff-so-fancy | less --tabs=4 -RF
+	hooksPath =~/.githooks
 [init]
 	defaultBranch = main
 [diff]
