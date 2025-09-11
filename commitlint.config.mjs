@@ -14,25 +14,18 @@ const angular_projects = execSync("ng config projects | jq -r 'keys[]'").toStrin
   .split('\n')
   .filter(pkg => !pkg.startsWith('No config found.'))
 
-// const mvn_command = "help:evaluate -Dexpression=project.modules -q -DforceStdout | grep -oP '(?<=<string>).*?(?=</string>)' || true"
- 
-// const maven_projects = execSync(`[ -f ../pom.xml ] && mvn -f ../pom.xml ${mvn_command} || mvn ${mvn_command}`).toString().trim()
-//   .split('\n')
-
 const maven_projects = execSync(`awk -F'[<>]' '/<module>/{print $3}' "$(git rev-parse --show-toplevel)/pom.xml" 2>/dev/null || true`).toString().trim().split('\n')
 
-const current_maven = execSync("mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout").toString().trim();
-
-// const last_used_scope = execSync('git log -1 --pretty=%B | sed -nE "s/^[a-z]+\(([^)]+)\):.*/\1/p"').toString().trim();
+//const current_maven = execSync("mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout").toString().trim();
 const last_used_scope = execSync('git log -1 --pretty=%B | sed -nE "s/^[a-z]+\\(([^)]+)\\):.*/\\1/p"').toString().trim();
 
 
 const default_scopes = ['frontend', 'backend', 'db'];
 let scopes = angular_projects.concat(default_scopes);
 scopes = scopes.concat(maven_projects);
-if(!current_maven.startsWith("standalone-pom")){
-  scopes.push(current_maven);
-}
+//if(!current_maven.startsWith("standalone-pom")){
+  //scopes.push(current_maven);
+//}
 scopes = [...new Set(scopes)]
 
 /** @type {import('cz-git').UserConfig} */

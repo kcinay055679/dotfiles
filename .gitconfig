@@ -7,7 +7,8 @@
     coo = !git fetch && git checkout
     ci = commit
 	cc = czg
-	ccr = czg --retry
+	ccr = !git ra && czg --retry
+	ra = "!!git diff --name-only --cached | xargs -l git add"  
 	acc = "!!g add && g cc "
 	accr = "!!g add && g ccr "
 	ccc = "!czg --retry && git commit --amend"

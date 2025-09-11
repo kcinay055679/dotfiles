@@ -11,7 +11,7 @@ setopt APPEND_HISTORY
 
 EDITOR=micro
 
-source ~/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+# source ~/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 export ZSH_CUSTOM="$HOME/.oh-my-zsh/custom" 
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
@@ -24,8 +24,8 @@ bindkey "^[[1;5C" forward-word
 bindkey "^[[1;5D" backward-word
 bindkey '^H' backward-kill-word
 bindkey '^[[3;5~' kill-word
-bindkey -M menuselect  '^[[D' .backward-char  '^[OD' .backward-char
-bindkey -M menuselect  '^[[C'  .forward-char  '^[OC'  .forward-char
+# bindkey -M menuselect  '^[[D' .backward-char  '^[OD' .backward-char
+# bindkey -M menuselect  '^[[C'  .forward-char  '^[OC'  .forward-char
 
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
@@ -286,9 +286,11 @@ alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
 alias df=dotfiles
 
-alias "dfu"="df add -u && df cm 'update existing files'"
+alias "dfu"="df add -u && df cm 'update existing files' && df push"
 
 alias "df-u"=dfu
+
+alias "df-files"="df ls-files"
 
 
 # docker aliases
@@ -359,14 +361,14 @@ eval $(thefuck --alias)
 
 ## Fuzzyfinder
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-# autoload -Uz compinit && compinit
+ autoload -Uz compinit && compinit
 
 
 # OC client
-if [ $commands[oc] ]; then
-  source <(oc completion zsh)
-  compdef _oc oc
-fi
+# if [ $commands[oc] ]; then
+  # source <(oc completion zsh)
+  # compdef _oc oc
+#fi
 
 
 
