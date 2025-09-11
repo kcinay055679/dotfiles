@@ -276,10 +276,6 @@ alias reload="exec zsh"
 
 alias rl=reload
 
-alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-
-alias cf=config
-
 alias xa=xargs
 
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
@@ -291,6 +287,8 @@ alias "dfu"="df add -u && df cm 'update existing files' && df push"
 alias "df-u"=dfu
 
 alias "df-files"="df ls-files"
+
+alias dff="df-files"
 
 
 # docker aliases
